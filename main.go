@@ -41,58 +41,22 @@ func (bt *TreeNode) Print() {
     bt.Right.Print()
 }
 
-func (bt *TreeNode) Search(target int) *TreeNode{
-    if bt == nil {
-        return nil 
-    }
-
-    if (target < bt.Val) {
-        return bt.Left.Search(target)
-    } else if (target > bt.Val) {
-        return bt.Right.Search(target)
-    } 
-    return bt
-    
-}
-
 func main() {
     // creating the cases
     var root *TreeNode
-    nums := []int{4, 2, 7, 1, 3}
+    nums := []int{4,2,7,1,3}
     for i := range nums {
         root = root.Insert(nums[i])
     }
+
+    n := 5
+    
+    fmt.Println("before insert:")
     root.Print()
-    s := root.Search(7)
-    if s != nil {
-        fmt.Println("target found", s.Val) 
-    } else {
-        fmt.Println("target not found")
-    }
+
+    root.Insert(n)
+    fmt.Println("after insert:")
+
+    root.Print()
 }
 
-
-/*
-LeetCode struct and solution:
-
- * Definition for a binary tree node.
- * type TreeNode struct {
- *     Val int
- *     Left *TreeNode
- *     Right *TreeNode
- * }
-
-
-func searchBST(root *TreeNode, val int) *TreeNode {
-   if root == nil {
-       return nil
-   } 
-
-   if (val < root.Val) {
-       return searchBST(root.Left, val)
-   } else if (val > root.Val) {
-       return searchBST(root.Right, val)
-   } 
-   return root
-}
-*/
