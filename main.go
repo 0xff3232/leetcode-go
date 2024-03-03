@@ -1,73 +1,37 @@
-// https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
+// https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/solutions/1259453/simple-go-solution-using-recursion/
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+    "slices"
+)
 
+// TreeNode represents a node in a binary tree.
 type TreeNode struct {
-    Val int
-    Left *TreeNode
+    Val   int
+    Left  *TreeNode
     Right *TreeNode
 }
 
-func NewTreeNode(val int) *TreeNode {
-    return &TreeNode{
-        Val: val,
-        Left: nil,
-        Right: nil, 
+// buildTree constructs a binary tree from preorder and inorder traversal arrays.
+func buildTree(preorder []int, inorder []int) *TreeNode {
+    if len(preorder) == 0 || len(inorder) == 0 {
+        return nil
     }
-}
 
-// needed to see console output.
-func (bt *TreeNode) InorderPrint() {
-    if bt == nil {
-        return
-    }
-    bt.Left.InorderPrint()
-    fmt.Println(bt.Val)
-    bt.Right.InorderPrint()
-}
-
-func (bt *TreeNode) kthSmallest(k int) int {
-    ans := -1
-
-    var dfs func(node *TreeNode)
-    dfs = func(node *TreeNode) { 
-       if node == nil {
-           return
-       } 
-        if node.Left != nil && k != 0 {
-            dfs(node.Left)
-        }
-        k--
-        if k == 0 {
-            ans = node.Val
-            return
-        }
-        if node.Right != nil && k != 0 {
-            dfs(node.Right)
-        } 
-    }
-    dfs(bt)
-    return ans
+    root := &TreeNode{Val: preorder[0]}
+    mid := slices.Index(inorder, preorder[0]) // Use slices.Index for finding the index
+    root.Left = buildTree(preorder[1:mid+1], inorder[:mid]) 
+    root.Right = buildTree(preorder[mid+1:], inorder[mid+1:])
+    return root
 }
 
 func main() {
-    /*
-    example
-            4
-           / \
-          2   7
-         / \
-        1   3
-    */
-    root := &TreeNode{4, &TreeNode{2, &TreeNode{1, nil, nil}, 
-            &TreeNode{3, nil, nil}}, &TreeNode{7, nil, nil}}  
-    fmt.Println("Inorder traversal--")
-    root.InorderPrint()
-    fmt.Println("--")
-
-    fmt.Println(root.kthSmallest(2))
-    fmt.Println(root.kthSmallest(5))
-    fmt.Println(root.kthSmallest(1))
+    // Example usage
+    preorder := []int{3, 9, 20, 15, 7}
+    inorder := []int{9, 3, 15, 20, 7}
+    root := buildTree(preorder, inorder)
+    fmt.Println("Root of the constructed tree:", root.Val)
+    // Output should be the root of the tree, for this example: 3
 }
