@@ -1,4 +1,4 @@
-// https://leetcode.com/problems/binary-tree-inorder-traversal/submissions/1191279308/
+// https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
 
 package main
 
@@ -18,7 +18,7 @@ func NewTreeNode(val int) *TreeNode {
     }
 }
 
-// needed to see console output, also answers question.
+// needed to see console output.
 func (bt *TreeNode) InorderPrint() {
     if bt == nil {
         return
@@ -26,6 +26,30 @@ func (bt *TreeNode) InorderPrint() {
     bt.Left.InorderPrint()
     fmt.Println(bt.Val)
     bt.Right.InorderPrint()
+}
+
+func (bt *TreeNode) kthSmallest(k int) int {
+    ans := -1
+
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) { 
+       if node == nil {
+           return
+       } 
+        if node.Left != nil && k != 0 {
+            dfs(node.Left)
+        }
+        k--
+        if k == 0 {
+            ans = node.Val
+            return
+        }
+        if node.Right != nil && k != 0 {
+            dfs(node.Right)
+        } 
+    }
+    dfs(bt)
+    return ans
 }
 
 func main() {
@@ -42,23 +66,8 @@ func main() {
     fmt.Println("Inorder traversal--")
     root.InorderPrint()
     fmt.Println("--")
-}
 
-/*
-LeetCode answer:
-
-func inorderTraversal(root *TreeNode) []int {    
-    var result []int
-    inorder(root, &result)
-    return result
+    fmt.Println(root.kthSmallest(2))
+    fmt.Println(root.kthSmallest(5))
+    fmt.Println(root.kthSmallest(1))
 }
-
-func inorder(root *TreeNode, arr *[]int) {
-    if root == nil {
-        return
-    }
-    inorder(root.Left, arr)
-    *arr = append(*arr, root.Val)
-    inorder(root.Right, arr)
-}
-*/
